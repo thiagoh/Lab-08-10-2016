@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour {
     public Camera camera;
     public Transform spawnPoint;
 
+    [Header("Sound Clips")]
+    public AudioSource jumpSound;
+    public AudioSource deathSound;
+
     // Use this for initialization
     void Start() {
         initialize();
@@ -43,6 +47,7 @@ public class PlayerController : MonoBehaviour {
 
             if (Input.GetKeyDown(KeyCode.Space)) {
                 jump = 1f;
+                jumpSound.Play();
             }
 
             rigidbody.AddForce(new Vector2(
@@ -54,13 +59,18 @@ public class PlayerController : MonoBehaviour {
             jump = 0f;
         }
 
-        camera.transform.position = new Vector3(
-            transform.position.x,
-            transform.position.y,
-            -10f);
+        moveCamera();
 
         //Debug.Log(move);
         Debug.Log("Grounded: " + grounded);
+    }
+
+    private void moveCamera() {
+
+        camera.transform.position = new Vector3(
+                    transform.position.x,
+                    transform.position.y,
+                    -10f);
     }
 
     private void flip() {
@@ -80,6 +90,7 @@ public class PlayerController : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D other) {
         if (other.gameObject.CompareTag("DeathPlane")) {
+            deathSound.Play();
             transform.position = spawnPoint.position;
         }
     }
