@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour {
     public float velocity = 10f;
     public float jumpForce = 100f;
     public Camera camera;
+    public Transform spawnPoint;
 
     // Use this for initialization
     void Start() {
@@ -54,8 +55,8 @@ public class PlayerController : MonoBehaviour {
         }
 
         camera.transform.position = new Vector3(
-            transform.position.x * 0.8f,
-            transform.position.y * 0.8f,
+            transform.position.x,
+            transform.position.y,
             -10f);
 
         //Debug.Log(move);
@@ -70,10 +71,16 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
+    private void OnCollisionStay2D(Collision2D other) {
 
         if (other.gameObject.CompareTag("Platform")) {
             grounded = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("DeathPlane")) {
+            transform.position = spawnPoint.position;
         }
     }
 
@@ -89,5 +96,6 @@ public class PlayerController : MonoBehaviour {
         move = 0f;
         facingRight = true;
         grounded = false;
+        transform.position = spawnPoint.position;
     }
 }
